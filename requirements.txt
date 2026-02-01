@@ -10,6 +10,3 @@ django-idempotency-key  # To handle retries and prevent duplicate entries [cite:
 gunicorn                # Production WSGI HTTP Server for deployment 
 whitenoise              # To serve static files (like your app.js) in production 
 python-dotenv           # To manage environment variables (SECRET_KEY, DB_URL) [cite: 13, 16]
-
-# Optional: Real Money Handling
-decimal                 # Standard library (no install needed), but ensure it is used [cite: 33, 74]
