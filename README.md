@@ -1,59 +1,57 @@
----
+# 💰 Personal Finance Tool: Expense Tracker
 
-# 💰 Expense Tracker (Full-Stack)
+A resilient, full-stack application built to record and review personal expenses. This project is designed to handle real-world challenges like unreliable networks, duplicate submissions, and precise financial data handling.
 
-A resilient, production-oriented personal finance tool built to record and review expenses. This project focuses on **data correctness** and **system reliability** under real-world conditions like network failures and duplicate form submissions.
+### 🌐 Live Links
 
-### 🌐 Links
+Live Application: https://expense-tracker-fs-m07f.onrender.com
 
-* **Live Application:** [https://expense-tracker-fs-m07f.onrender.com](https://expense-tracker-fs-m07f.onrender.com)
-* **GitHub Repository:** [https://github.com/Abhishek611-dev/expense-tracker-fs](https://github.com/Abhishek611-dev/expense-tracker-fs)
+GitHub Repository: https://github.com/Abhishek611-dev/expense-tracker-fs
 
 ---
 
 ## 🚀 Key Features
 
-* **Create Expenses:** Record amount, category, description, and date.
-* **List & Review:** View all expenses in a clean, responsive table.
-* **Server-Side Filtering:** Filter expenses by category via API query parameters.
-* **Server-Side Sorting:** Sort expenses by date (Newest First) as the default view.
-* **Live Totals:** Real-time calculation of the total for the currently filtered list.
+* **Expense Creation:** Record amount, category, description, and date.
+* **Dynamic List:** A responsive table showing all recorded expenses.
+* **Server-Side Filtering:** Filter by category via API query parameters.
+* **Server-Side Sorting:** Default "Newest First" sorting for better UX.
+* **Live Totals:** Automatic calculation of totals based on the current filtered view.
 
 ---
 
-## 🛠️ Production-Ready Design Decisions
+## 🛠️ Production Design Decisions
 
 ### 1. Data Correctness (Money Handling)
 
-To avoid the floating-point errors inherent in JavaScript/Python `float` types, I used:
+To prevent floating-point errors (e.g.,  resulting in ), I implemented:
 
-* **Backend:** `DecimalField` in Django to store amounts with exact precision.
-* **Frontend:** `parseFloat().toFixed(2)` for consistent display of currency.
+* **Backend:** Used Django `DecimalField` for high-precision storage.
+* **Frontend:** Used `parseFloat().toFixed(2)` to ensure currency is always displayed correctly.
 
-### 2. Resilience to Network Issues (Idempotency)
+### 2. Resilience (Idempotency)
 
-I implemented **Idempotency Keys** to handle "retries" and "double-clicking":
+To satisfy the requirement of handling "unreliable networks" and "multiple clicks":
 
-* **Frontend:** Each `POST` request generates a unique UUID (Idempotency-Key) via `crypto.randomUUID()`.
-* **Backend:** The `django-idempotency-key` middleware ensures that if the same key is sent twice, the server returns the original success response without creating a duplicate.
+* **Frontend:** Every `POST` request generates a unique `Idempotency-Key` using `crypto.randomUUID()`.
+* **Backend:** The system uses `django-idempotency-key` middleware. If a user double-clicks or a network retry occurs, the server recognizes the key and prevents duplicate entries.
 
-### 3. Static File Management
+### 3. Static Asset Serving
 
-For production performance on Render, I used **WhiteNoise**. This allows the Django application to serve its own static files (like `app.js`) efficiently without needing a complex Nginx setup.
-
----
-
-## ⚖️ Trade-offs & Limitations
-
-* **Database:** Used **SQLite** for persistence to ensure zero-config portability within the assignment timebox.
-* **Authentication:** Intentionally omitted to focus on the core requirements of expense management and idempotency.
-* **State Management:** Chose **Vanilla JavaScript** to keep the bundle size small and demonstrate core DOM manipulation skills.
+I utilized **WhiteNoise** to serve static files (like `app.js` and `styles.css`) directly through Django. This ensures the application is self-contained and loads reliably on production platforms like Render.
 
 ---
 
-## ⚙️ Local Setup Instructions
+## ⚖️ Trade-offs
 
-1. **Clone the Repository**
+* **Database:** Used **SQLite** for this submission to ensure the project is lightweight and zero-configuration. For a large-scale production app, I would migrate to PostgreSQL.
+* **Auth:** Authentication was omitted to focus on the core logic of expense tracking and API idempotency within the assignment timeframe.
+
+---
+
+## ⚙️ Local Setup
+
+1. **Clone & Enter**
 ```bash
 git clone https://github.com/Abhishek611-dev/expense-tracker-fs.git
 cd expense-tracker-fs
@@ -61,35 +59,31 @@ cd expense-tracker-fs
 ```
 
 
-2. **Install Dependencies**
+2. **Install**
 ```bash
 pip install -r requirements.txt
 
 ```
 
 
-3. **Database Setup**
+3. **Migrate & Run**
 ```bash
 python manage.py migrate
-
-```
-
-
-4. **Run the Server**
-```bash
 python manage.py runserver
 
 ```
 
 
-Access the UI at `http://127.0.0.1:8000/`.
+Visit: `http://127.0.0.1:8000/`
 
 ---
 
-## 🧪 Testing the Requirements
+## 🧪 Verification
 
-* **Test Filter:** Add different categories and use the dropdown to verify filtering.
-* **Test Sorting:** Verify that the newest expenses always appear at the top.
-* **Test Resilience:** Observe the `Idempotency-Key` in the browser's Network tab headers during every `POST` request.
+* **Test Filtering:** Use the category dropdown; the "Total" will update dynamically based on the filtered results.
+* **Test Sorting:** Add an expense with an older date; it will correctly appear below newer entries.
+* **Test Resilience:** The browser console shows a unique `Idempotency-Key` for every submission, protecting your data from duplicates.
 
 ---
+
+**Would you like me to show you how to verify the Idempotency-Key is working by using the "Network" tab in your browser?**
