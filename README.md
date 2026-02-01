@@ -6,8 +6,8 @@ A resilient, production-oriented personal finance tool built to record and revie
 
 ### 🌐 Links
 
-* **Live Application:** [https://expense-tracker-fs-m07f.onrender.com]
-* **GitHub Repository:** [https://github.com/Abhishek611-dev/expense-tracker-fs]
+* **Live Application:** [https://expense-tracker-fs-m07f.onrender.com](https://expense-tracker-fs-m07f.onrender.com)
+* **GitHub Repository:** [https://github.com/Abhishek611-dev/expense-tracker-fs](https://github.com/Abhishek611-dev/expense-tracker-fs)
 
 ---
 
@@ -25,29 +25,29 @@ A resilient, production-oriented personal finance tool built to record and revie
 
 ### 1. Data Correctness (Money Handling)
 
-To avoid the floating-point errors inherent in JavaScript/Python `float` types (e.g., `0.1 + 0.2 != 0.3`), I used:
+To avoid the floating-point errors inherent in JavaScript/Python `float` types, I used:
 
 * **Backend:** `DecimalField` in Django to store amounts with exact precision.
 * **Frontend:** `parseFloat().toFixed(2)` for consistent display of currency.
 
 ### 2. Resilience to Network Issues (Idempotency)
 
-Per the assignment requirements for handling "retries" and "clicking submit multiple times," I implemented **Idempotency Keys**:
+I implemented **Idempotency Keys** to handle "retries" and "double-clicking":
 
 * **Frontend:** Each `POST` request generates a unique UUID (Idempotency-Key) via `crypto.randomUUID()`.
-* **Backend:** The `django-idempotency-key` middleware ensures that if the same key is sent twice (due to a retry or double-click), the server returns the original success response without creating a duplicate expense entry in the database.
+* **Backend:** The `django-idempotency-key` middleware ensures that if the same key is sent twice, the server returns the original success response without creating a duplicate.
 
 ### 3. Static File Management
 
-For production performance on Render, I used **WhiteNoise**. This allows the Django application to serve its own static files (like `app.js`) efficiently without needing a complex Nginx setup, ensuring the UI loads reliably every time.
+For production performance on Render, I used **WhiteNoise**. This allows the Django application to serve its own static files (like `app.js`) efficiently without needing a complex Nginx setup.
 
 ---
 
 ## ⚖️ Trade-offs & Limitations
 
-* **Database:** Used **SQLite** for persistence. While PostgreSQL is preferred for high-concurrency production, SQLite was chosen here for zero-config portability within the assignment timebox.
-* **Authentication:** Intentionally omitted to focus on the core requirement of expense management and idempotency. The system assumes a single-user environment.
-* **State Management:** Chose **Vanilla JavaScript** over a framework like React to keep the bundle size small and demonstrate a deep understanding of DOM manipulation and Fetch API.
+* **Database:** Used **SQLite** for persistence to ensure zero-config portability within the assignment timebox.
+* **Authentication:** Intentionally omitted to focus on the core requirements of expense management and idempotency.
+* **State Management:** Chose **Vanilla JavaScript** to keep the bundle size small and demonstrate core DOM manipulation skills.
 
 ---
 
@@ -88,21 +88,8 @@ Access the UI at `http://127.0.0.1:8000/`.
 
 ## 🧪 Testing the Requirements
 
-* **Test Filter:** Add an expense under "Food" and another under "Work," then use the dropdown to verify only the relevant items appear.
-* **Test Sorting:** Add expenses with different dates; verify the newest appears at the top.
-* **Test Resilience:** In the browser console, you can see the `Idempotency-Key` being sent with every `POST` request to ensure no duplicates occur during retries.
+* **Test Filter:** Add different categories and use the dropdown to verify filtering.
+* **Test Sorting:** Verify that the newest expenses always appear at the top.
+* **Test Resilience:** Observe the `Idempotency-Key` in the browser's Network tab headers during every `POST` request.
 
 ---
-
-### 💡 Final Step for You:
-
-1. Create a file named `README.md` in your project root.
-2. Paste the content above.
-3. **Update the links** at the top with your actual Render and GitHub URLs.
-4. Commit and push:
-```bash
-git add README.md
-git commit -m "docs: complete production readme for submission"
-git push origin main
-
-```
